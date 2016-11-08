@@ -65,6 +65,7 @@
 
 /* Begin PBXFileReference section */
 		58408B4C1DD1F5D800CA0863 /* DemoCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoCardViewController.swift; sourceTree = "<group>"; };
+		58408B4E1DD2235800CA0863 /* FFCardStackController.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; name = FFCardStackController.podspec; path = ../FFCardStackController.podspec; sourceTree = "<group>"; };
 		91CCE9101D96AB9B00A360DD /* FFCardStackControllerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FFCardStackControllerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		91CCE9131D96AB9B00A360DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		91CCE9151D96AB9B00A360DD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -100,6 +101,7 @@
 		91CCE9071D96AB9B00A360DD = {
 			isa = PBXGroup;
 			children = (
+				58408B4E1DD2235800CA0863 /* FFCardStackController.podspec */,
 				91CCE9331D96ABFA00A360DD /* FFCardStackController.xcodeproj */,
 				91CCE9121D96AB9B00A360DD /* FFCardStackControllerDemo */,
 				91CCE9271D96AB9B00A360DD /* FFCardStackControllerDemoTests */,
