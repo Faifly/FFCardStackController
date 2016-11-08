@@ -10,8 +10,8 @@ import UIKit
 
 public enum FFCardStackResult
 {
-    case Liked
-    case Disliked
+    case like
+    case dislike
 }
 
 public protocol FFCardStackControllerDelegate: class
@@ -48,9 +48,14 @@ open class FFCardStackCard: NSObject
     // MARK: - Private
     // MARK: Constraints
     fileprivate var externalConstraints = [NSLayoutConstraint]()
+    fileprivate var leadingOffset: CGFloat = 0.0
+    fileprivate var trailingOffset: CGFloat = 0.0
     
     fileprivate func createExternalConstraints(leadingOffset: CGFloat, trailingOffset: CGFloat)
     {
+        self.leadingOffset = leadingOffset
+        self.trailingOffset = trailingOffset
+        
         self.externalConstraints.removeAll()
         
         let verticalLayout = NSLayoutConstraint.constraints(withVisualFormat: "V:|-\(leadingOffset)-[card]-\(trailingOffset)-|", options: [], metrics: nil, views: ["card": self.view])
@@ -60,7 +65,21 @@ open class FFCardStackCard: NSObject
         self.externalConstraints.append(contentsOf: horizontalLayout)
         
         NSLayoutConstraint.activate(self.externalConstraints)
-        self.view.layoutSubviews()
+    }
+    
+    fileprivate func updateConstraints()
+    {
+        for constraint in self.externalConstraints
+        {
+            if constraint.firstAttribute == .top || constraint.firstAttribute == .leading
+            {
+                constraint.constant = self.leadingOffset
+            }
+            else if constraint.firstAttribute == .bottom || constraint.firstAttribute == .trailing
+            {
+                constraint.constant = self.trailingOffset
+            }
+        }
     }
     
     fileprivate func removeExternalConstraints()
@@ -89,6 +108,7 @@ open class FFCardStackController: UIViewController
     open var maxSimultaneousCards = 3
     open var defaultOffset: CGFloat = 30.0
     open var indexOffset: CGFloat = 5.0
+    open var actionTriggerThreshold: CGFloat = 0.25
     
     // MARK: Private properties
     fileprivate var cards = [FFCardStackCard]()
@@ -107,12 +127,30 @@ open class FFCardStackController: UIViewController
     
     open func likeTopCard(animated: Bool = true)
     {
-        // TODO: Implement
+        guard self.cards.count > 0 else
+        {
+            return
+        }
+        
+        let card = self.cards.first!
+        self.moveView(card.view, by: -card.view.bounds.size.width, animated: animated) { [unowned self] in
+            self.delegate.cardStackController(self, didDismissCard: card, withResult: .like)
+            self.removeTopCard()
+        }
     }
     
     open func dislikeTopCard(animated: Bool = true)
     {
-        // TODO: Implement
+        guard self.cards.count > 0 else
+        {
+            return
+        }
+        
+        let card = self.cards.first!
+        self.moveView(card.view, by: card.view.bounds.size.width, animated: animated) { [unowned self] in
+            self.delegate.cardStackController(self, didDismissCard: card, withResult: .dislike)
+            self.removeTopCard()
+        }
     }
     
     // MARK: Logic
@@ -133,11 +171,14 @@ open class FFCardStackController: UIViewController
         {
             if let card = self.delegate.cardStackController(self, cardForIndex: i)
             {
+                card.view.isUserInteractionEnabled = i == 0
                 card.index = i
+                card.likeView?.alpha = 0.0
+                card.dislikeView?.alpha = 0.0
                 
                 self.cards.append(card)
                 
-                self.view.addSubview(card.view)
+                self.view.insertSubview(card.view, at: 0)
                 
                 let leadingOffset = self.defaultOffset + self.indexOffset * CGFloat(i)
                 let trailingOffset = self.defaultOffset - self.indexOffset * CGFloat(i)
@@ -152,17 +193,103 @@ open class FFCardStackController: UIViewController
         }
     }
     
-    fileprivate func removeTopCard(animated: Bool = true)
+    private func removeTopCard(animated: Bool = true)
     {
-        /* TODO: Implement it
-            1. Remove top card from superview and cards array.
-            2. Update existing cards - update their constraints
-            3. Load the next card (continue loading cards)
-        */
+        self.cards.first!.view.removeFromSuperview()
+        self.cards.removeFirst()
+        
+        for card in self.cards
+        {
+            card.index = card.index - 1
+            card.leadingOffset -= self.indexOffset
+            card.trailingOffset += self.indexOffset
+            card.updateConstraints()
+        }
+        
+        self.cards.first?.view.isUserInteractionEnabled = true
+        
+        if animated
+        {
+            UIView.animate(withDuration: 0.3, animations: { [unowned self] in
+                self.view.layoutIfNeeded()
+            })
+        }
+        else
+        {
+            self.view.layoutIfNeeded()
+        }
+        
+        self.continueLoadingCards()
     }
     
+    private func returnTopCardToInitialPosition(animated: Bool = true)
+    {
+        let view = self.cards.first!.view!
+        self.moveView(view, by: self.originalCenter.x - view.center.x, animated: animated)
+    }
+    
+    private func moveView(_ view: UIView, by x: CGFloat, animated: Bool = false, completion: (() -> ())? = nil)
+    {
+        let modifiedCenter = CGPoint(x: view.center.x + x, y: view.center.y)
+        if animated
+        {
+            UIView.animate(withDuration: 0.2, animations: { [unowned view] in
+                view.center = modifiedCenter
+                }, completion: { completed in
+                    if let handler = completion
+                    {
+                        handler()
+                    }
+            })
+        }
+        else
+        {
+            view.center = CGPoint(x: view.center.x + x, y: view.center.y)
+            if let handler = completion
+            {
+                handler()
+            }
+        }
+    }
+    
+    private var dragStartPoint: CGPoint!
+    private var originalCenter: CGPoint!
     @objc fileprivate func onPanGesture(sender: UIPanGestureRecognizer)
     {
-        // TODO: Should change card's position here. If some threshold is reached, should proceed with either like or dislike
+        let locInView = sender.location(in: sender.view)
+        if sender.state == .began
+        {
+            self.originalCenter = sender.view!.center
+            self.dragStartPoint = locInView
+        }
+        else if sender.state == .changed
+        {
+            self.moveView(sender.view!, by: locInView.x - self.dragStartPoint.x)
+        }
+        else if sender.state == .cancelled || sender.state == .failed
+        {
+            self.returnTopCardToInitialPosition()
+            self.dragStartPoint = nil
+        }
+        else if sender.state == .ended
+        {
+            if fabs(self.originalCenter.x - sender.view!.center.x) < sender.view!.bounds.size.width * self.actionTriggerThreshold
+            {
+                self.returnTopCardToInitialPosition()
+            }
+            else
+            {
+                if self.dragStartPoint.x - locInView.x > 0 // Moving to left
+                {
+                    self.dislikeTopCard()
+                }
+                else
+                {
+                    self.likeTopCard()
+                }
+            }
+            
+            self.dragStartPoint = nil
+        }
     }
 }

@@ -12,7 +12,7 @@ import FFCardStackController
 class ViewController: UIViewController, FFCardStackControllerDelegate
 {
     weak var cardStackController: FFCardStackController!
-    fileprivate var cardsSource = [5, 4, 3, 2, 1]
+    fileprivate var cardsSource = [1, 2, 3, 4, 5]
     
 // MARK: View controller
     
