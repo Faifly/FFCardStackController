@@ -17,15 +17,33 @@ public enum FFCardStackResult
 public protocol FFCardStackControllerDelegate: class
 {
     func cardStackController(_ cardStackController: FFCardStackController, cardForIndex index: Int) -> FFCardStackCard?
-    func cardStackController(_ cardStackController: FFCardStackController, didDismissCardWithResult: FFCardStackResult)
+    func cardStackController(_ cardStackController: FFCardStackController, didDismissCard card: FFCardStackCard, withResult result: FFCardStackResult)
 }
 
 open class FFCardStackCard: NSObject
 {
     // MARK: Public properties
-    open var view: UIView!
-    open weak var likeView: UIView?
-    open weak var dislikeView: UIView?
+    public var view: UIView!
+    public weak var likeView: UIView?
+    public weak var dislikeView: UIView?
+    
+    public fileprivate(set) var index: Int!
+    
+    override init()
+    {
+        super.init()
+    }
+    
+    public convenience init(view: UIView, likeView: UIView?, dislikeView: UIView?)
+    {
+        self.init()
+        
+        self.view = view
+        self.likeView = likeView
+        self.dislikeView = dislikeView
+        
+        self.view.translatesAutoresizingMaskIntoConstraints = false
+    }
     
     // MARK: - Private
     // MARK: Constraints
@@ -35,13 +53,14 @@ open class FFCardStackCard: NSObject
     {
         self.externalConstraints.removeAll()
         
-        let verticalLayout = NSLayoutConstraint.constraints(withVisualFormat: "V:|-\(leadingOffset)-[card]-\(trailingOffset)-|", options: [], metrics: nil, views: ["card": self])
-        let horizontalLayout = NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(leadingOffset)-[card]-\(trailingOffset)-|", options: [], metrics: nil, views: ["card": self])
+        let verticalLayout = NSLayoutConstraint.constraints(withVisualFormat: "V:|-\(leadingOffset)-[card]-\(trailingOffset)-|", options: [], metrics: nil, views: ["card": self.view])
+        let horizontalLayout = NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(leadingOffset)-[card]-\(trailingOffset)-|", options: [], metrics: nil, views: ["card": self.view])
         
         self.externalConstraints.append(contentsOf: verticalLayout)
         self.externalConstraints.append(contentsOf: horizontalLayout)
         
         NSLayoutConstraint.activate(self.externalConstraints)
+        self.view.layoutSubviews()
     }
     
     fileprivate func removeExternalConstraints()
@@ -73,16 +92,6 @@ open class FFCardStackController: UIViewController
     
     // MARK: Private properties
     fileprivate var cards = [FFCardStackCard]()
-    
-    // MARK: View controller
-    override open func viewDidLoad()
-    {
-        super.viewDidLoad()
-        
-        assert(self.delegate != nil)
-        
-        self.reloadCards()
-    }
     
     // MARK: Public methods
     open func reloadCards()
@@ -124,6 +133,8 @@ open class FFCardStackController: UIViewController
         {
             if let card = self.delegate.cardStackController(self, cardForIndex: i)
             {
+                card.index = i
+                
                 self.cards.append(card)
                 
                 self.view.addSubview(card.view)

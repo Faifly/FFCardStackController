@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		58408B4D1DD1F5D800CA0863 /* DemoCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58408B4C1DD1F5D800CA0863 /* DemoCardViewController.swift */; };
 		91CCE9141D96AB9B00A360DD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91CCE9131D96AB9B00A360DD /* AppDelegate.swift */; };
 		91CCE9161D96AB9B00A360DD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91CCE9151D96AB9B00A360DD /* ViewController.swift */; };
 		91CCE9191D96AB9B00A360DD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 91CCE9171D96AB9B00A360DD /* Main.storyboard */; };
@@ -63,6 +64,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		58408B4C1DD1F5D800CA0863 /* DemoCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DemoCardViewController.swift; sourceTree = "<group>"; };
 		91CCE9101D96AB9B00A360DD /* FFCardStackControllerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FFCardStackControllerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		91CCE9131D96AB9B00A360DD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		91CCE9151D96AB9B00A360DD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 			children = (
 				91CCE9131D96AB9B00A360DD /* AppDelegate.swift */,
 				91CCE9151D96AB9B00A360DD /* ViewController.swift */,
+				58408B4C1DD1F5D800CA0863 /* DemoCardViewController.swift */,
 				91CCE9171D96AB9B00A360DD /* Main.storyboard */,
 				91CCE91A1D96AB9B00A360DD /* Assets.xcassets */,
 				91CCE91C1D96AB9B00A360DD /* LaunchScreen.storyboard */,
@@ -276,6 +279,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				91CCE9161D96AB9B00A360DD /* ViewController.swift in Sources */,
+				58408B4D1DD1F5D800CA0863 /* DemoCardViewController.swift in Sources */,
 				91CCE9141D96AB9B00A360DD /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -491,6 +495,7 @@
 				91CCE92F1D96AB9B00A360DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		91CCE9301D96AB9B00A360DD /* Build configuration list for PBXNativeTarget "FFCardStackControllerDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -499,6 +504,7 @@
 				91CCE9321D96AB9B00A360DD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
