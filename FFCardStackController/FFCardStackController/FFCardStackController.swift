@@ -247,7 +247,7 @@ open class FFCardStackController: UIViewController
         }
         if animated
         {
-            UIView.animate(withDuration: 0.2, animations: { [unowned card] in
+            UIView.animate(withDuration: 0.5, animations: { [unowned card] in
                 card.view.center = modifiedCenter
                 card.likeView?.alpha = likeAlpha
                 card.dislikeView?.alpha = dislikeAlpha
@@ -297,7 +297,7 @@ open class FFCardStackController: UIViewController
             }
             else
             {
-                if self.dragStartPoint.x - locInView.x > 0 // Moving to left
+                if self.originalCenter.x - locInView.x > 0 // Moving to left
                 {
                     self.dislikeTopCard()
                 }
