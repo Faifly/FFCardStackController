@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
 spec.name = "FFCardStackController"
-spec.version = "1.0.1"
+spec.version = "1.0.2"
 spec.summary = "Cards management view controller"
 spec.homepage = "https://github.com/Faifly/FFCardStackController"
 spec.license = { type: 'MIT', file: 'LICENSE' }

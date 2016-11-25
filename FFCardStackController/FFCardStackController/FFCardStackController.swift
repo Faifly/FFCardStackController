@@ -106,7 +106,7 @@ open class FFCardStackController: UIViewController
     // MARK: Public properties
     open weak var delegate: FFCardStackControllerDelegate!
     open var maxSimultaneousCards = 3
-    open var defaultOffset: CGFloat = 30.0
+    open var defaultOffset: CGFloat = 15.0
     open var indexOffset: CGFloat = 5.0
     open var actionTriggerThreshold: CGFloat = 0.25
     
@@ -297,13 +297,13 @@ open class FFCardStackController: UIViewController
             }
             else
             {
-                if self.originalCenter.x - locInView.x > 0 // Moving to left
+                if self.originalCenter.x - locInView.x > 0 // Moving to Right
                 {
-                    self.dislikeTopCard()
+                    self.likeTopCard()
                 }
                 else
                 {
-                    self.likeTopCard()
+                    self.dislikeTopCard()
                 }
             }
             
