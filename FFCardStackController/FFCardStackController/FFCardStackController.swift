@@ -18,6 +18,7 @@ public protocol FFCardStackControllerDelegate: class
 {
     func cardStackController(_ cardStackController: FFCardStackController, cardForIndex index: Int) -> FFCardStackCard?
     func cardStackController(_ cardStackController: FFCardStackController, didDismissCard card: FFCardStackCard, withResult result: FFCardStackResult)
+    func cardStackController(_ cardStackController: FFCardStackController, didTapOnCard card: FFCardStackCard)
 }
 
 open class FFCardStackCard: NSObject
@@ -88,7 +89,7 @@ open class FFCardStackCard: NSObject
     }
     
     // MARK: Recognizers
-    fileprivate var panRecognizer: UIPanGestureRecognizer?
+    private var panRecognizer: UIPanGestureRecognizer?
     
     fileprivate func setupPanRecognizer(target: AnyObject, selector: Selector)
     {
@@ -97,7 +98,19 @@ open class FFCardStackCard: NSObject
             self.view.removeGestureRecognizer(self.panRecognizer!)
         }
         self.panRecognizer = UIPanGestureRecognizer(target: target, action: selector)
-        self.view.addGestureRecognizer(panRecognizer!)
+        self.view.addGestureRecognizer(self.panRecognizer!)
+    }
+    
+    private var tapRecognizer: UITapGestureRecognizer?
+    
+    fileprivate func setupTapRecognizer(target: AnyObject, selector: Selector)
+    {
+        if self.tapRecognizer != nil
+        {
+            self.view.removeGestureRecognizer(self.tapRecognizer!)
+        }
+        self.tapRecognizer = UITapGestureRecognizer(target: target, action: selector)
+        self.view.addGestureRecognizer(self.tapRecognizer!)
     }
 }
 
@@ -187,6 +200,7 @@ open class FFCardStackController: UIViewController
                 card.createExternalConstraints(leadingOffset: leadingOffset, trailingOffset: trailingOffset)
                 
                 card.setupPanRecognizer(target: self, selector: #selector(onPanGesture))
+                card.setupTapRecognizer(target: self, selector: #selector(onTap))
             }
             else
             {
@@ -272,7 +286,7 @@ open class FFCardStackController: UIViewController
     
     private var dragStartPoint: CGPoint!
     private var originalCenter: CGPoint!
-    @objc fileprivate func onPanGesture(sender: UIPanGestureRecognizer)
+    @objc private func onPanGesture(sender: UIPanGestureRecognizer)
     {
         let locInView = sender.location(in: sender.view)
         if sender.state == .began
@@ -309,5 +323,10 @@ open class FFCardStackController: UIViewController
             
             self.dragStartPoint = nil
         }
+    }
+    
+    @objc private func onTap()
+    {
+        self.delegate.cardStackController(self, didTapOnCard: self.cards.first!)
     }
 }

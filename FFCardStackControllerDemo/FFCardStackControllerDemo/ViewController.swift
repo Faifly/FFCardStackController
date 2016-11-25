@@ -76,5 +76,10 @@ class ViewController: UIViewController, FFCardStackControllerDelegate
     {
         self.cardsSource.remove(at: card.index)
     }
+    
+    func cardStackController(_ cardStackController: FFCardStackController, didTapOnCard card: FFCardStackCard)
+    {
+        print("Card tapped: \(card.index!)")
+    }
 }
 
