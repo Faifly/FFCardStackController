@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -27,13 +28,37 @@
                                     <segue destination="5Xf-ZZ-D5k" kind="embed" id="c1y-RM-VQX"/>
                                 </connections>
                             </containerView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vrp-eo-s4t">
+                                <rect key="frame" x="16" y="629" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Jbx-I7-g3s"/>
+                                </constraints>
+                                <state key="normal" title="Like"/>
+                                <connections>
+                                    <action selector="onLike" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZOr-5Q-rfl"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nEn-os-8Dl">
+                                <rect key="frame" x="314" y="629" width="45" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Fww-lb-5eC"/>
+                                </constraints>
+                                <state key="normal" title="Dislike"/>
+                                <connections>
+                                    <action selector="onDislike" destination="BYZ-38-t0r" eventType="touchUpInside" id="tZu-mU-4mm"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="nEn-os-8Dl" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="7C1-96-8y5"/>
                             <constraint firstAttribute="trailing" secondItem="GSj-7s-eYa" secondAttribute="trailing" id="98V-gS-lgy"/>
+                            <constraint firstItem="vrp-eo-s4t" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="9aR-A3-wiC"/>
                             <constraint firstItem="GSj-7s-eYa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="Cox-h3-2GP"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="nEn-os-8Dl" secondAttribute="bottom" constant="8" id="KGn-VC-R5z"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="GSj-7s-eYa" secondAttribute="bottom" constant="100" id="aIT-LP-s3u"/>
                             <constraint firstItem="GSj-7s-eYa" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="lQ3-mn-1bL"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="vrp-eo-s4t" secondAttribute="bottom" constant="8" id="q3x-6o-bMh"/>
                         </constraints>
                     </view>
                 </viewController>

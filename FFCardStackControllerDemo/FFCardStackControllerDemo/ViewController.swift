@@ -41,6 +41,18 @@ class ViewController: UIViewController, FFCardStackControllerDelegate
         self.cardStackController.reloadCards()
     }
     
+// MARK: Event handlers
+    
+    @IBAction func onLike()
+    {
+        self.cardStackController.likeTopCard()
+    }
+    
+    @IBAction func onDislike()
+    {
+        self.cardStackController.dislikeTopCard()
+    }
+    
 // MARK: Card Stack controller
     
     func cardStackController(_ cardStackController: FFCardStackController, cardForIndex index: Int) -> FFCardStackCard?
