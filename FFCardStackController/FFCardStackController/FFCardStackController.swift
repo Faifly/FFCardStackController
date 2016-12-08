@@ -289,10 +289,11 @@ open class FFCardStackController: UIViewController
     @objc private func onPanGesture(sender: UIPanGestureRecognizer)
     {
         let locInView = sender.location(in: sender.view)
+        let locInSuperview = sender.location(in: sender.view?.superview)
         if sender.state == .began
         {
             self.originalCenter = sender.view!.center
-            self.dragStartPoint = locInView
+            self.dragStartPoint = locInSuperview
         }
         else if sender.state == .changed
         {
@@ -311,7 +312,7 @@ open class FFCardStackController: UIViewController
             }
             else
             {
-                if self.originalCenter.x - locInView.x > 0 // Moving to Right
+                if self.originalCenter.x - locInSuperview.x < 0 // Moving to Right
                 {
                     self.likeTopCard()
                 }
