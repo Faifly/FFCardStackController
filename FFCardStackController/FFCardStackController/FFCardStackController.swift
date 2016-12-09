@@ -146,8 +146,15 @@ open class FFCardStackController: UIViewController
         }
         
         let card = self.cards.first!
+        
+        var y: CGFloat = 0.0
+        if self.originalCenter != nil
+        {
+            y = -(self.originalCenter.y - card.view.center.y)
+        }
+        
         self.originalCenter = card.view.center
-        self.moveCard(card, by: card.view.bounds.size.width, animated: animated) { [unowned self] in
+        self.moveCard(card, byX: card.view.bounds.size.width, byY: y, animated: animated) { [unowned self] in
             self.delegate.cardStackController(self, didDismissCard: card, withResult: .like)
             self.removeTopCard()
         }
@@ -161,8 +168,15 @@ open class FFCardStackController: UIViewController
         }
         
         let card = self.cards.first!
+        
+        var y: CGFloat = 0.0
+        if self.originalCenter != nil
+        {
+            y = -(self.originalCenter.y - card.view.center.y)
+        }
+        
         self.originalCenter = card.view.center
-        self.moveCard(card, by: -card.view.bounds.size.width, animated: animated) { [unowned self] in
+        self.moveCard(card, byX: -card.view.bounds.size.width, byY: y, animated: animated) { [unowned self] in
             self.delegate.cardStackController(self, didDismissCard: card, withResult: .dislike)
             self.removeTopCard()
         }
@@ -241,14 +255,14 @@ open class FFCardStackController: UIViewController
     private func returnTopCardToInitialPosition(animated: Bool = true)
     {
         let card = self.cards.first!
-        self.moveCard(card, by: self.originalCenter.x - card.view.center.x, animated: animated)
+        self.moveCard(card, byX: self.originalCenter.x - card.view.center.x, byY: self.originalCenter.y - card.view.center.y, animated: animated)
     }
     
-    private func moveCard(_ card: FFCardStackCard, by x: CGFloat, animated: Bool = false, completion: (() -> ())? = nil)
+    private func moveCard(_ card: FFCardStackCard, byX x: CGFloat, byY y: CGFloat, animated: Bool = false, completion: (() -> ())? = nil)
     {
         let alphaAmplificationFactor: CGFloat = 2.5
         
-        let modifiedCenter = CGPoint(x: card.view.center.x + x, y: card.view.center.y)
+        let modifiedCenter = CGPoint(x: card.view.center.x + x, y: card.view.center.y + y)
         var likeAlpha: CGFloat = 0.0
         var dislikeAlpha: CGFloat = 0.0
         if modifiedCenter.x - self.originalCenter.x > 0.0
@@ -297,7 +311,7 @@ open class FFCardStackController: UIViewController
         }
         else if sender.state == .changed
         {
-            self.moveCard(self.cards.first!, by: locInView.x - self.dragStartPoint.x)
+            self.moveCard(self.cards.first!, byX: locInView.x - self.dragStartPoint.x + self.defaultOffset, byY: locInView.y - self.dragStartPoint.y + self.defaultOffset)
         }
         else if sender.state == .cancelled || sender.state == .failed
         {
