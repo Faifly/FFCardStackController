@@ -265,6 +265,8 @@ open class FFCardStackController: UIViewController
         let modifiedCenter = CGPoint(x: card.view.center.x + x, y: card.view.center.y + y)
         var likeAlpha: CGFloat = 0.0
         var dislikeAlpha: CGFloat = 0.0
+        let angle: CGFloat = ((modifiedCenter.x - self.originalCenter.x) / card.view.bounds.size.width) * 0.35
+        let transform = CGAffineTransform(rotationAngle: angle)
         if modifiedCenter.x - self.originalCenter.x > 0.0
         {
             likeAlpha = ((modifiedCenter.x - self.originalCenter.x) / card.view.bounds.size.width) * alphaAmplificationFactor
@@ -279,6 +281,7 @@ open class FFCardStackController: UIViewController
                 card.view.center = modifiedCenter
                 card.likeView?.alpha = likeAlpha
                 card.dislikeView?.alpha = dislikeAlpha
+                card.view.transform = transform
                 }, completion: { completed in
                     if let handler = completion
                     {
@@ -291,6 +294,7 @@ open class FFCardStackController: UIViewController
             card.view.center = modifiedCenter
             card.likeView?.alpha = likeAlpha
             card.dislikeView?.alpha = dislikeAlpha
+            card.view.transform = transform
             if let handler = completion
             {
                 handler()
