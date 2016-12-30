@@ -49,18 +49,20 @@ open class FFCardStackCard: NSObject
     // MARK: - Private
     // MARK: Constraints
     fileprivate var externalConstraints = [NSLayoutConstraint]()
-    fileprivate var leadingOffset: CGFloat = 0.0
-    fileprivate var trailingOffset: CGFloat = 0.0
+    fileprivate var horizontalOffset: CGFloat = 0.0
+    fileprivate var topOffset: CGFloat = 0.0
+    fileprivate var bottomOffset: CGFloat = 0.0
     
-    fileprivate func createExternalConstraints(leadingOffset: CGFloat, trailingOffset: CGFloat)
+    fileprivate func createExternalConstraints(horizontalOffset: CGFloat, topOffset: CGFloat, bottomOffset: CGFloat)
     {
-        self.leadingOffset = leadingOffset
-        self.trailingOffset = trailingOffset
+        self.horizontalOffset = horizontalOffset
+        self.topOffset = topOffset
+        self.bottomOffset = bottomOffset
         
         self.externalConstraints.removeAll()
         
-        let verticalLayout = NSLayoutConstraint.constraints(withVisualFormat: "V:|-\(leadingOffset)-[card]-\(trailingOffset)-|", options: [], metrics: nil, views: ["card": self.view])
-        let horizontalLayout = NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(leadingOffset)-[card]-\(trailingOffset)-|", options: [], metrics: nil, views: ["card": self.view])
+        let verticalLayout = NSLayoutConstraint.constraints(withVisualFormat: "V:|-\(topOffset)-[card]-\(bottomOffset)-|", options: [], metrics: nil, views: ["card": self.view])
+        let horizontalLayout = NSLayoutConstraint.constraints(withVisualFormat: "H:|-\(horizontalOffset)-[card]-\(horizontalOffset)-|", options: [], metrics: nil, views: ["card": self.view])
         
         self.externalConstraints.append(contentsOf: verticalLayout)
         self.externalConstraints.append(contentsOf: horizontalLayout)
@@ -72,13 +74,17 @@ open class FFCardStackCard: NSObject
     {
         for constraint in self.externalConstraints
         {
-            if constraint.firstAttribute == .top || constraint.firstAttribute == .leading
+            if constraint.firstAttribute == .top
             {
-                constraint.constant = self.leadingOffset
+                constraint.constant = self.topOffset
             }
-            else if constraint.firstAttribute == .bottom || constraint.firstAttribute == .trailing
+            else if constraint.firstAttribute == .trailing || constraint.firstAttribute == .leading
             {
-                constraint.constant = self.trailingOffset
+                constraint.constant = self.horizontalOffset
+            }
+            else if constraint.firstAttribute == .bottom
+            {
+                constraint.constant = self.bottomOffset
             }
         }
     }
@@ -209,9 +215,9 @@ open class FFCardStackController: UIViewController
                 
                 self.view.insertSubview(card.view, at: 0)
                 
-                let leadingOffset = self.defaultOffset + self.indexOffset * CGFloat(i)
-                let trailingOffset = self.defaultOffset - self.indexOffset * CGFloat(i)
-                card.createExternalConstraints(leadingOffset: leadingOffset, trailingOffset: trailingOffset)
+                let minorOffset = self.defaultOffset + self.indexOffset * CGFloat(i)
+                let majorOffset = self.defaultOffset - self.indexOffset * CGFloat(i)
+                card.createExternalConstraints(horizontalOffset: minorOffset, topOffset: minorOffset, bottomOffset: majorOffset)
                 
                 card.setupPanRecognizer(target: self, selector: #selector(onPanGesture))
                 card.setupTapRecognizer(target: self, selector: #selector(onTap))
@@ -231,8 +237,9 @@ open class FFCardStackController: UIViewController
         for card in self.cards
         {
             card.index = card.index - 1
-            card.leadingOffset -= self.indexOffset
-            card.trailingOffset += self.indexOffset
+            card.horizontalOffset -= self.indexOffset
+            card.topOffset -= self.indexOffset
+            card.bottomOffset += self.indexOffset
             card.updateConstraints()
         }
         
