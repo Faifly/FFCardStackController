@@ -160,7 +160,7 @@ open class FFCardStackController: UIViewController
         }
         
         self.originalCenter = card.view.center
-        self.moveCard(card, byX: card.view.bounds.size.width, byY: y, animated: animated) { [unowned self] in
+        self.moveCard(card, byX: card.view.bounds.size.width * 1.33, byY: y, animated: animated) { [unowned self] in
             self.delegate.cardStackController(self, didDismissCard: card, withResult: .like)
             self.removeTopCard()
         }
@@ -182,7 +182,7 @@ open class FFCardStackController: UIViewController
         }
         
         self.originalCenter = card.view.center
-        self.moveCard(card, byX: -card.view.bounds.size.width, byY: y, animated: animated) { [unowned self] in
+        self.moveCard(card, byX: -card.view.bounds.size.width * 1.33, byY: y, animated: animated) { [unowned self] in
             self.delegate.cardStackController(self, didDismissCard: card, withResult: .dislike)
             self.removeTopCard()
         }
