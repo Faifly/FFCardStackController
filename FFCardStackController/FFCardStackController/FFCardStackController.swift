@@ -131,6 +131,7 @@ open class FFCardStackController: UIViewController
     
     // MARK: Private properties
     fileprivate var cards = [FFCardStackCard]()
+    private var isAnimationInProgress = false
     
     // MARK: Public methods
     open func reloadCards()
@@ -147,6 +148,11 @@ open class FFCardStackController: UIViewController
     open func likeTopCard(animated: Bool = true)
     {
         guard self.cards.count > 0 else
+        {
+            return
+        }
+        
+        guard !self.isAnimationInProgress else
         {
             return
         }
@@ -169,6 +175,11 @@ open class FFCardStackController: UIViewController
     open func dislikeTopCard(animated: Bool = true)
     {
         guard self.cards.count > 0 else
+        {
+            return
+        }
+        
+        guard !self.isAnimationInProgress else
         {
             return
         }
@@ -284,16 +295,18 @@ open class FFCardStackController: UIViewController
         }
         if animated
         {
+            self.isAnimationInProgress = true
             UIView.animate(withDuration: 0.5, animations: { [unowned card] in
                 card.view.center = modifiedCenter
                 card.likeView?.alpha = likeAlpha
                 card.dislikeView?.alpha = dislikeAlpha
                 card.view.transform = transform
-                }, completion: { completed in
+                }, completion: { [weak self] completed in
                     if let handler = completion
                     {
                         handler()
                     }
+                    self?.isAnimationInProgress = false
             })
         }
         else
